@@ -1,0 +1,35 @@
+# 忽略所有编译生成的库文件  
+*.lib
+*.a
+*.so 
+
+# 忽略所有备份文件  
+*.bak
+*.swp
+*.tmp
+
+# 忽略所有的日志文件和临时文件  
+*.log
+*.temp
+
+# 忽略操作系统自动生成的文件  
+Thumbs.db
+.DS_Store
+
+# 忽略 IDE 生成的配置文件和缓存  
+.idea/
+*.iml
+.vscode/
+
+# 忽略 node_modules 目录和 package-lock.json 文件（针对 Node.js 项目）  
+node_modules/
+package-lock.json
+
+# 忽略构建产物目录  
+build/
+dist/
+target/
+
+# 忽略敏感信息文件  
+.env
+secret*

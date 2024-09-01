@@ -20,7 +20,15 @@ function traverse(value, seen = new Set()) {
   }
   return value
 }
-export function watch(source, cb) {
+
+export function watch(source, cb, options) {
+  return dowatch(source, cb, options)
+}
+export function watchEffect(source, options) {
+  return dowatch(source, null, options)
+}
+
+export function dowatch(source, cb, options) {
   // 1）source 是一个响应式对象
   // 2）source 是一个函数
 
@@ -34,12 +42,22 @@ export function watch(source, cb) {
   let oldValue
   // 里面的属性就会收集当前的 effect
   // 如果数据变化，会执行对应的 scheduler 方法
-  const effect = new ReactiveEffect(getter, () => {
-    const newVal = effect.run()
-    cb(newVal, oldValue)
-    oldValue = newVal
-  })
+
+  let clear
+  let onCleanup = (fn) => {
+    clear = fn
+  }
+  const job = () => {
+    if (cb) {
+      if (clear) clear()
+      const newVal = effect.run()
+      cb(newVal, oldValue, onCleanup)
+      oldValue = newVal
+    } else { // watchEffect 只需要运行自身就可以
+      effect.run()
+    }
+  }
+  const effect = new ReactiveEffect(getter, job)
   oldValue = effect.run()
   console.log(oldValue);
-
 }
